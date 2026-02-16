@@ -1,3 +1,4 @@
+// Eta Vule
 // μMag Standard Problem #1
 // Permalloy 1um x 2um x 20nm
 
@@ -44,3 +45,4 @@ for i:=0; i<=steps; i++{
     minimize()
     tablesave()
 }
+
