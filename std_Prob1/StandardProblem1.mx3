@@ -1,0 +1,46 @@
+// μMag Standard Problem #1
+// Permalloy 1um x 2um x 20nm
+
+// -----------------------------
+// MESH DEFINITION
+// -----------------------------
+SetGridsize(256, 128, 1)
+SetCellsize(7.8125e-9, 7.8125e-9, 20e-9)
+
+// Geometry
+SetGeom(rect(2e-6, 1e-6))
+
+// -----------------------------
+// MATERIAL PARAMETERS
+// -----------------------------
+Msat  = 8e5
+Aex   = 1.3e-11
+Ku1   = 5e2
+anisU = vector(1,0,0)   // Easy axis along long direction (x)
+
+// Damping (large for static hysteresis)
+alpha = 1
+
+// -----------------------------
+// INITIAL MAGNETIZATION
+// -----------------------------
+m = uniform(1,0,0)
+
+// -----------------------------
+// TABLE OUTPUT
+// -----------------------------
+tableadd(B_ext)
+tableadd(m.average())
+
+// -----------------------------
+// HYSTERESIS LOOP (LONG AXIS)
+// -----------------------------
+Bmax := 0.05   // 50 mT
+steps := 50
+
+for i:=0; i<=steps; i++{
+    B := Bmax - 2*Bmax*i/steps
+    B_ext = vector(B, 0, 0)
+    minimize()
+    tablesave()
+}
