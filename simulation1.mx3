@@ -1,0 +1,41 @@
+// ============================
+// GEOMETRY
+// ============================
+SetGridsize(256, 128, 1)
+SetCellsize(5e-9, 5e-9, 5e-9)
+
+// ============================
+// MATERIAL PARAMETERS (Permalloy example)
+// ============================
+Msat  = 8e5        // A/m
+Aex   = 13e-12     // J/m
+alpha = 0.02
+Ku1   = 0
+anisU = vector(0,0,1)
+
+// ============================
+// INITIAL STATE
+// ============================
+m = Vortex(1, -1)
+
+// ============================
+// RELAXATION
+// ============================
+relax()
+
+// ============================
+// SAVE RESULTS
+// ============================
+save(m)
+saveas(m, "relaxed_vortex")
+
+// save magnetization components
+save(m.x)
+save(m.y)
+save(m.z)
+
+// save energy
+tableadd(E_total)
+tableadd(E_exch)
+tableadd(E_demag)
+tablesave()
