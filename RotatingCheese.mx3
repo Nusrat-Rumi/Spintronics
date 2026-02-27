@@ -1,5 +1,4 @@
-Interlude: Rotating Cheese
-In this example we define a geometry that looks like a slice of cheese and have it rotate in time.
+
 setgridsize(128, 128, 1)
 setcellsize(2e-9, 2e-9, 2e-9)
 
@@ -24,4 +23,5 @@ for i:=0; i<=90; i=i+30{
 	m = uniform(cos(angle), sin(angle), 0)
 	minimize()
 	save(m)
+
 }
