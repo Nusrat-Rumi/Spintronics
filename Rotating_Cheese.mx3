@@ -21,4 +21,6 @@ for i:=0; i<=90; i=i+30{
 	setgeom(cheese.rotz(angle))
 	m = uniform(cos(angle), sin(angle), 0)
 	minimize()
+
 	save(m)
+}
