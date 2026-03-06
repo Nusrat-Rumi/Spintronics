@@ -1,0 +1,64 @@
+// grid size
+Nx := 256
+Ny := 128
+Nz := 20
+
+setgridsize(Nx, Ny, Nz)
+setcellsize(2e-9, 2e-9, 1e-9)
+
+// material parameters
+Msat  = 2.1e6
+Aex   = 30e-12
+alpha = 0.01
+
+// -----------------------------
+// Define layers along thickness
+// -----------------------------
+for i:=0; i<Nz; i++{
+    z1 := i*1e-9
+    z2 := (i+1)*1e-9
+    defregion(i, zrange(z1, z2))
+}
+
+// -----------------------------
+// Anisotropy gradient
+// -----------------------------
+for i:=0; i<Nz; i++{
+
+    z := float64(i)/float64(Nz)
+
+    // anisotropy increases toward bottom
+    Ku := 5e4 + (2e6-5e4)*(1-z)
+
+    Ku1.SetRegion(i, Ku)
+
+    // anisotropy direction changes gradually
+    if i < Nz/2 {
+        anisU.SetRegion(i, vector(0,0,1))  // perpendicular region
+    } else {
+        anisU.SetRegion(i, vector(1,0,0))  // in-plane region
+    }
+}
+
+// -----------------------------
+// initial magnetization
+// -----------------------------
+m = uniform(1,0,0)
+
+// relax system
+relax()
+
+save(m)
+
+// -----------------------------
+// save magnetization vs time
+// -----------------------------
+tableadd(m)
+autosave(m, 10e-12)
+
+// -----------------------------
+// small excitation field
+// -----------------------------
+B_ext = vector(0,0,0.01*sinc(2*pi*20e9*t))
+
+run(10e-9)
