@@ -1,0 +1,51 @@
+// grid size
+Nx := 256
+Ny := 128
+Nz := 20
+
+setgridsize(Nx, Ny, Nz)
+setcellsize(2e-9, 2e-9, 1e-9)
+
+// material parameters
+Msat  = 2.1e6
+Aex   = 30e-12
+alpha = 0.01
+
+// create different regions along thickness
+for i:=0; i<Nz; i++{
+    defregion(i, layer(i,i+1))
+}
+
+// anisotropy gradient
+for i:=0; i<Nz; i++{
+
+    z := float64(i)/float64(Nz)
+
+    // anisotropy increases toward bottom
+    Ku := 5e4 + (2e6-5e4)*(1-z)
+
+    Ku1.SetRegion(i, Ku)
+
+    // anisotropy direction changes gradually
+    if i < Nz/2 {
+        anisU.SetRegion(i, vector(0,0,1))  // perpendicular
+    } else {
+        anisU.SetRegion(i, vector(1,0,0))  // in-plane
+    }
+}
+
+// initial magnetization
+m = uniform(1,0,0)
+
+// relax system
+relax()
+
+save(m)
+
+tableadd(m)
+autosave(m, 10e-12)
+
+// small pulse field
+B_ext = vector(0,0,0.01*sin(2*pi*20e9*t))
+
+run(10e-9)
